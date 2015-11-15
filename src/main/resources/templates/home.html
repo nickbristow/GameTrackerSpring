@@ -34,7 +34,7 @@ Welcome {{.}}  <a href="/logout">Logout</a>
 <form action="add-game" method="post">
     <input type="text" placeholder="Enter Game" name="gameName"/>
     <select name="system">
-        <option value="Playstayion4">PS4</option>
+        <option value="Playstation4">PS4</option>
         <option value="Xbox360">Xbox 360</option>
         <option value="PC">PC</option>
         <option value="Nintendo64">Nintendo64</option>
@@ -59,6 +59,7 @@ Welcome {{.}}  <a href="/logout">Logout</a>
     </select>
     <button type="submit">Edit</button>
 </form>
+<!-- <a href="/edit-game?id={{id}}">Edit</a> -->
 <a href="/delete-game?id={{id}}">Delete</a>
 {{/username}}
 <br>
