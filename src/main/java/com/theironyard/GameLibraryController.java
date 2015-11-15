@@ -35,28 +35,11 @@ public class GameLibraryController {
             user.password = PasswordHash.createHash("password");
             users.save(user);
         }
-
-       if (games.count() == 0){
-            Scanner scanner = new Scanner(new File("games.csv"));
-            scanner.nextLine();
-            while(scanner.hasNext()){
-                String line = scanner.nextLine();
-                String[] columns = line.split(",");
-                Game g = new Game();
-                int id = Integer.valueOf(columns[2]);
-                User u = users.findOne(id);
-                g.user=u;
-                g.name = columns[0];
-                g.system=columns[1];
-                games.save(g);
-            }
-        }
     }
 
 
 
     @RequestMapping("/")
-
     public String home(HttpSession session,
                        Model model,
                       // String search,
@@ -64,10 +47,9 @@ public class GameLibraryController {
                        String userGames){
 
         String username = (String) session.getAttribute("username");
+        model.addAttribute("username", username);
 
-        if (username == null){
-            return "login";
-        }
+
         if(userGames!=null){
             model.addAttribute("games", users.findOneByName(username).games);
         } else if(system != null){
@@ -77,6 +59,29 @@ public class GameLibraryController {
         model.addAttribute("users", users.findAll());
         model.addAttribute("games", games.findAll());
         return "home";
+    }
+    @RequestMapping("login")
+    public String login(Model model, HttpSession session, String username, String password) throws Exception {
+        session.setAttribute("username", username);
+
+        User user = users.findOneByName(username);
+        if(user==null){
+            user = new User();
+            user.name = username;
+            user.password = PasswordHash.createHash(password);
+            users.save(user);
+        } else if (!PasswordHash.validatePassword(password, user.password)){
+            throw new Exception("WRONG PASSWORD");
+        }
+        model.addAttribute("games", games.findAll());
+
+        return "redirect:/";
+    }
+    @RequestMapping("logout")
+    public String logout(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.invalidate();
+        return "redirect:/";
     }
 
     @RequestMapping("add-game")
@@ -97,16 +102,18 @@ public class GameLibraryController {
         return "redirect:/";
     }
     @RequestMapping("edit-game")
-    public String editGame(String gameName,
-                           String system,
-                           Integer id) throws Exception{
+    public String editGame(Integer id,
+                           String gameName,
+                           String system
+                           ) throws Exception{
+
         Game game = games.findOne(id);
         User user = users.findOne(id);
         game.name = gameName;
         game.system = system;
         game.user = user;
         games.save(game);
-        return "redirect:/";
+        return "edit";
     }
     @RequestMapping("delete-game")
     public String deleteGame(Integer id){
@@ -116,27 +123,7 @@ public class GameLibraryController {
 
 
 
-    @RequestMapping("login")
-    public String login(HttpSession session, String username, String password) throws Exception {
-        session.setAttribute("username", username);
-        User user = users.findOneByName(username);
-        if(user==null){
-            user = new User();
-            user.name = username;
-            user.password = PasswordHash.createHash(password);
-            users.save(user);
-        } else if (!PasswordHash.validatePassword(password, user.password)){
-            throw new Exception("WRONG PASSWORD");
-        }
 
-        return "redirect:/";
-    }
-    @RequestMapping("logout")
-    public String logout(HttpServletRequest request){
-        HttpSession session = request.getSession();
-        session.invalidate();
-        return "redirect:/login";
-    }
 
 
 
