@@ -1,16 +1,16 @@
 package com.theironyard;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import org.springframework.jmx.export.annotation.ManagedAttribute;
+
+import javax.persistence.*;
 import java.util.List;
 
 /**
  * Created by DrScott on 11/13/15.
  */
 @Entity
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue
@@ -19,6 +19,6 @@ public class User {
     String name;
     String password;
 
-    @ManyToOne
+@OneToMany(mappedBy = "user")
     List<Game> games;
 }

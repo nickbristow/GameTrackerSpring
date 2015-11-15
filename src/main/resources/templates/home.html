@@ -2,13 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    {{#username}}
-    <title>{{username}}'s Game Library</title>
+    <title>Game Library</title>
+
+<body>
+{{#username}}
+Welcome {{username}}  <form action="logout" method="post"><button type="submit">Logout</button> </form>
 {{/username}}
+<br><br>
+
+
+<form action="add-game" method="post">
+    <input type="text" placeholder="Enter Game" name="gameName"/>
+    <select name="system">
+        <option value="PS4">PS4</option>
+        <option value="Xbox360">Xbox 360</option>
+        <option value="PC">PC</option>
+    </select>
+    <button type="submit">Add Game</button>
+
+</form>
+{{#games}}
+{{name}}--{{system}}<br>
+{{/games}}
+
 
 
 </head>
-<body>
-
 </body>
 </html>
