@@ -19,6 +19,4 @@ public class User {
     String name;
     String password;
 
-@OneToMany(mappedBy = "user")
-    List<Game> games;
 }

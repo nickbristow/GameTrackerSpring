@@ -16,7 +16,7 @@ public class Game{
     @GeneratedValue
     Integer id;
 
-    String name;
+    String title;
     String system;
 
     @ManyToOne
