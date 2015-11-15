@@ -38,7 +38,7 @@ public class GameLibraryController {
                 Game g = new Game();
                 g.name = columns[0];
                 g.system=columns[1];
-                g.user = user;
+               // g.user = user;
                 games.save(g);
             }
         }
@@ -58,7 +58,8 @@ public class GameLibraryController {
         if (username == null){
             return "login";
         }
-
+        model.addAttribute("users", users.findAll());
+        model.addAttribute("games", games.findAll());
         return "home";
     }
 
