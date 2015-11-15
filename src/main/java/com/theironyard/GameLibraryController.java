@@ -28,15 +28,15 @@ public class GameLibraryController {
 
     @PostConstruct
     public void init() throws InvalidKeySpecException, NoSuchAlgorithmException, FileNotFoundException {
-        /*User user = users.findOneByName("Admin");
+        User user = users.findOneByName("Admin");
         if(user == null){
             user = new User();
             user.name="Admin";
             user.password = PasswordHash.createHash("password");
             users.save(user);
-        }*/
+        }
 
-        if (games.count() == 0){
+       if (games.count() == 0){
             Scanner scanner = new Scanner(new File("games.csv"));
             scanner.nextLine();
             while(scanner.hasNext()){
@@ -59,7 +59,7 @@ public class GameLibraryController {
 
     public String home(HttpSession session,
                        Model model,
-                       String search,
+                      // String search,
                        String system,
                        String userGames){
 
@@ -71,8 +71,9 @@ public class GameLibraryController {
         if(userGames!=null){
             model.addAttribute("games", users.findOneByName(username).games);
         } else if(system != null){
-            model.addAttribute("games", games.findBySystem(system));
-        }
+            model.addAttribute("users", users.findOneByName(username));
+            model.addAttribute("games", games.findBySystemOrderByNameAsc(system));
+        } else
         model.addAttribute("users", users.findAll());
         model.addAttribute("games", games.findAll());
         return "home";
@@ -83,18 +84,33 @@ public class GameLibraryController {
                           String gameName,
                           String system
                           ) throws Exception {
-        // HttpSession session = request.getSession();
         String username = (String) session.getAttribute("username");
         if (username == null){
             throw new Exception("Not logged in!");
         }
         User user = users.findOneByName(username);
-
         Game game = new Game();
         game.name = gameName;
         game.system = system;
         game.user=user;
         games.save(game);
+        return "redirect:/";
+    }
+    @RequestMapping("edit-game")
+    public String editGame(String gameName,
+                           String system,
+                           Integer id) throws Exception{
+        Game game = games.findOne(id);
+        User user = users.findOne(id);
+        game.name = gameName;
+        game.system = system;
+        game.user = user;
+        games.save(game);
+        return "redirect:/";
+    }
+    @RequestMapping("delete-game")
+    public String deleteGame(Integer id){
+        games.delete(id);
         return "redirect:/";
     }
 
@@ -103,7 +119,6 @@ public class GameLibraryController {
     @RequestMapping("login")
     public String login(HttpSession session, String username, String password) throws Exception {
         session.setAttribute("username", username);
-
         User user = users.findOneByName(username);
         if(user==null){
             user = new User();
@@ -111,7 +126,7 @@ public class GameLibraryController {
             user.password = PasswordHash.createHash(password);
             users.save(user);
         } else if (!PasswordHash.validatePassword(password, user.password)){
-            throw new Exception("WRONG PASSWORD DUMMY!");
+            throw new Exception("WRONG PASSWORD");
         }
 
         return "redirect:/";
@@ -120,7 +135,7 @@ public class GameLibraryController {
     public String logout(HttpServletRequest request){
         HttpSession session = request.getSession();
         session.invalidate();
-        return "redirect:/";
+        return "redirect:/login";
     }
 
 

@@ -6,9 +6,11 @@
 </head>
 
 <body>
-{{#users}}
+
+
+{{#user}}
 Welcome {{name}}  <form action="logout" method="post"><button type="submit">Logout</button> </form>
-{{/users}}
+{{/user}}
 <br><br>
 <a href="/">All</a>
 <a href="/?system=Playstation4"> Playstation 4</a>
@@ -21,15 +23,19 @@ Welcome {{name}}  <form action="logout" method="post"><button type="submit">Logo
 <form action="add-game" method="post">
     <input type="text" placeholder="Enter Game" name="gameName"/>
     <select name="system">
-        <option value="PS4">PS4</option>
+        <option value="Playstayion4">PS4</option>
         <option value="Xbox360">Xbox 360</option>
         <option value="PC">PC</option>
+        <option value="Nintendo64">Nintendo64</option>
     </select>
     <button type="submit">Add Game</button>
-
 </form>
 {{#games}}
-{{name}}--{{system}} entered by {{#users}} {{name}} {{/users}}<br>
+{{name}}--{{system}} entered by {{#user}} {{name}} {{/user}}
+<form action="delete-game" method="post" style="display:inline;">
+    <input type="hidden" name="id" value="{{id}}">
+    <button type="submit">Delete</button></form>
+<br>
 {{/games}}
 
 

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<form action="edit-game" method="post">
+    <input type="hidden" name="id" value="{{id}}"/>
+    <input type="text" placeholder="Enter Game" name="gameName"/>
+    <select name="system">
+        <option value="PS4">PS4</option>
+        <option value="Xbox360">Xbox 360</option>
+        <option value="PC">PC</option>
+    </select>
+    <button type="submit">Edit</button>
+    </form>
+</body>
+</html>
