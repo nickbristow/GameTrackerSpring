@@ -104,16 +104,24 @@ public class GameLibraryController {
     @RequestMapping("edit-game")
     public String editGame(Integer id,
                            String gameName,
-                           String system
+                           String system,
+                           HttpSession session
                            ) throws Exception{
 
+        if (session.getAttribute("username")==null){
+            throw new Exception("Not logged in!");
+        }
+        //User user = users.findOne(id);
+        //int idNum = Integer.valueOf(id);
+
+
         Game game = games.findOne(id);
-        User user = users.findOne(id);
+        User user = users.findOne(game.id);
         game.name = gameName;
         game.system = system;
         game.user = user;
         games.save(game);
-        return "edit";
+        return "redirect:/edit-game";
     }
     @RequestMapping("delete-game")
     public String deleteGame(Integer id){
