@@ -94,7 +94,7 @@ public class GameLibraryController {
     }
 
     @RequestMapping("edit-game")
-    public String editGame(Integer id,
+    public String editGame(@RequestParam("id") Integer id,
                            String edName,
                            String edSystem,
                            HttpSession session
